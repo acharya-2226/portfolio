@@ -12,7 +12,7 @@
 
 :root {
     /* Color Palette - Light Mode: Gradient Background with Purple/Blue Accents */
-    --bg-primary: linear-gradient(135deg, #6b5b95 0%, #977dff 25%, #0033ff 55%, #f2e6ee 100%);
+    --bg-primary: linear-gradient(135deg, #6b5b95 0%, #271a5c 25%, #0033ff 55%, #f2e6ee 100%);
     --bg-secondary: rgba(151, 125, 255, 0.12);
     --bg-tertiary: rgba(0, 51, 255, 0.08);
     --surface: #ffffff;
@@ -72,7 +72,20 @@
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
-    background: linear-gradient(135deg, #6b5b95 0%, #977dff 25%, #0033ff 55%, #f2e6ee 100%);
+    background: linear-gradient(
+    135deg,
+    #3b4ec8 0%,
+    #e6d6ef 6%,
+    #d9d5e3 14%,
+    #b9b4e8 22%,
+    #a99be2 32%,
+    #6f7de6 44%,
+    #7d8fd4 60%,
+    #6f7de6 76%,
+    #a990b0 90%,
+    #aa60bb 100%
+);
+
     min-height: 100vh;
 }
 
@@ -293,12 +306,15 @@ img {
     align-items: center;
     justify-content: center;
     padding: calc(var(--spacing-3xl) + 80px) var(--spacing-lg) var(--spacing-3xl);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .hero-background {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -800px;
     z-index: 0;
     overflow: hidden;
 }
@@ -323,9 +339,9 @@ img {
 .orb-2 {
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(0, 51, 255, 0.08) 0%, rgba(151, 125, 255, 0.04) 100%);
-    bottom: -250px;
-    left: -150px;
+    background: radial-gradient(circle, rgba(0, 51, 255, 0.05) 0%, rgba(151, 125, 255, 0.02) 100%);
+    bottom: -450px;
+    left: -250px;
     animation-delay: -7s;
 }
 
@@ -632,7 +648,7 @@ section {
 /* Section-specific label styles for background contrast */
 .about-section .section-label {
     background: rgba(255, 255, 255, 0.85);
-    border: 2px solid #ffffff;
+    border: 2px solid #000000;
     color: #6b5b95;
     box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3), 0 0 20px rgba(151, 125, 255, 0.4);
 }
@@ -647,21 +663,21 @@ section {
 .skills-section .section-label {
     background: rgba(151, 125, 255, 0.3);
     border: 2px solid #977dff;
-    color: #ffffff;
+    color: #000000;
     box-shadow: 0 4px 12px rgba(151, 125, 255, 0.3);
 }
 
 .experience-section .section-label {
     background: linear-gradient(135deg, rgba(242, 230, 238, 0.9) 0%, rgba(151, 125, 255, 0.1) 100%);
     border: 2px solid #977dff;
-    color: #0033ff;
+    color: #000000;
     box-shadow: 0 4px 12px rgba(151, 125, 255, 0.15);
 }
 
 .achievements-section .section-label {
     background: rgba(255, 255, 255, 0.7);
     border: 2px solid #0033ff;
-    color: #6b5b95;
+    color: #000000;
     box-shadow: 0 4px 12px rgba(0, 51, 255, 0.15);
 }
 
