@@ -633,12 +633,12 @@ section {
 .section-label {
     display: inline-block;
     padding: var(--spacing-xs) var(--spacing-md);
-    background: linear-gradient(135deg, rgba(151, 125, 255, 0.15) 0%, rgba(0, 51, 255, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0.9) 100%);
     border: 1px solid rgba(0, 51, 255, 0.2);
     border-radius: var(--radius-full);
     font-size: 0.875rem;
     font-weight: 600;
-    color: #0033ff;
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: var(--spacing-md);
@@ -646,7 +646,7 @@ section {
 }
 
 /* Section-specific label styles for background contrast */
-.about-section .section-label {
+/* .about-section .section-label {
     background: rgba(255, 255, 255, 0.85);
     border: 2px solid #000000;
     color: #6b5b95;
@@ -686,7 +686,7 @@ section {
     border: 2px solid #00006f;
     color: #ffffff;
     box-shadow: 0 4px 16px rgba(0, 51, 255, 0.4), 0 0 25px rgba(151, 125, 255, 0.3);
-}
+}  */
 
 .section-title {
     font-size: clamp(2.5rem, 5vw, 4rem);
@@ -1198,6 +1198,8 @@ section {
     width: 100%;
     padding: 16px 28px;
     font-size: 1.05rem;
+    justify-content: center;
+    text-align: center;
 }
 
 .form-status {
