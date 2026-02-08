@@ -1,0 +1,13 @@
+# robots.txt for Siddharth Acharya Portfolio
+User-agent: *
+Allow: /
+
+# Disallow specific files
+Disallow: /scripts.js
+Disallow: /styles.css
+
+# Sitemap location
+Sitemap: https://siddharthacharya.com.np/sitemap.xml
+
+# Crawl-delay (optional)
+Crawl-delay: 1
