@@ -165,6 +165,7 @@ const observeElements = () => {
         '.about-card',
         '.skill-category',
         '.project-card',
+        '.project-list-item',
         '.skill-group',
         '.timeline-item',
         '.achievement-card',
