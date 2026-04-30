@@ -34,7 +34,7 @@ const PROJECTS = [
     }
 ];
 
-const FORMSPREE_ENDPOINT = '';
+const FORMSPREE_ENDPOINT = 'https://api.web3forms.com/submit';
 
 const debounce = (fn, wait = 100) => {
     let timer;
