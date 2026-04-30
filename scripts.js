@@ -1,372 +1,381 @@
-/**
- * Portfolio Website - Enhanced JavaScript
- * Main script file with navigation, animations, and form handling
- */
+const PROJECTS = [
+    {
+        id: 'bi-nepal',
+        title: 'BI Nepal',
+        description: 'BI-focused project combining notebook-driven analysis with a frontend visualization layer, using HTML, CSS, and JavaScript to present insights in a clear and interactive way.',
+        tags: ['HTML', 'CSS', 'JavaScript', 'Data Analysis', 'Python'],
+        category: ['web', 'data'],
+        image: '',
+        github: 'https://github.com/acharya-2226/bi-nepal',
+        demo: '',
+        featured: true
+    },
+    {
+        id: 'lms-project',
+        title: 'Learning Management System',
+        description: 'Frontend LMS prototype featuring course pages, navigation, and student-oriented interactions, designed to reflect core e-learning platform features.',
+        tags: ['HTML5', 'CSS3', 'JavaScript'],
+        category: ['web'],
+        image: '',
+        github: 'https://github.com/acharya-2226/lms-project',
+        demo: '',
+        featured: true
+    },
+    {
+        id: 'ips-cinemas',
+        title: 'IPS Cinemas',
+        description: 'Cinema-style frontend project demonstrating interaction-focused page behavior and UI flow with JavaScript-powered user experience patterns.',
+        tags: ['JavaScript', 'HTML', 'CSS'],
+        category: ['web'],
+        image: '',
+        github: 'https://github.com/acharya-2226/ipscinemas',
+        demo: '',
+        featured: false
+    }
+];
 
-// ================================
-// UTILITY FUNCTIONS
-// ================================
+const FORMSPREE_ENDPOINT = '';
 
-const debounce = (func, wait = 10) => {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+const debounce = (fn, wait = 100) => {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), wait);
     };
 };
 
-const throttle = (func, limit = 100) => {
-    let inThrottle;
-    return function executedFunction(...args) {
-        if (!inThrottle) {
-            func.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-};
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ================================
-// DOM ELEMENTS
-// ================================
+function getProjectInitials(title) {
+    const words = title.trim().split(/\s+/).filter(Boolean);
 
-const nav = document.querySelector('.site-nav');
-const navToggle = document.querySelector('.nav-toggle');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('section[id]');
-const contactForm = document.getElementById('contact-form');
-const formStatus = document.getElementById('form-status');
-const yearElement = document.getElementById('year');
+    if (!words.length) {
+        return '';
+    }
 
-// ================================
-// NAVIGATION
-// ================================
+    if (words[0].length <= 3 && words[0] === words[0].toUpperCase()) {
+        return words[0];
+    }
 
-// Mobile menu toggle
-if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
-        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-        navToggle.setAttribute('aria-expanded', !isExpanded);
-        navMenu.classList.toggle('open');
-        
-        // Prevent body scroll when menu is open
-        if (!isExpanded) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
-    });
+    return words
+        .slice(0, 3)
+        .map((word) => word.charAt(0).toUpperCase())
+        .join('');
 }
 
-// Close mobile menu when clicking a link
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        if (navMenu && navMenu.classList.contains('open')) {
-            navMenu.classList.remove('open');
-            navToggle?.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-        }
-    });
-});
+function createProjectCard(project, isFeatured = false) {
+    const card = document.createElement('article');
+    card.className = `project-card${isFeatured ? ' project-card--featured' : ''}`;
+    card.setAttribute('data-id', project.id);
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (navMenu?.classList.contains('open') && 
-        !navMenu.contains(e.target) && 
-        !navToggle?.contains(e.target)) {
-        navMenu.classList.remove('open');
-        navToggle?.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+    const hasThumbnail = Boolean(project.image);
+    const githubIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>';
+    const externalIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>';
+
+    card.innerHTML = `
+        ${hasThumbnail ? `
+        <div class="project-thumbnail">
+            <img src="${project.image}" alt="${project.title} screenshot" loading="lazy" decoding="async" width="640" height="360">
+        </div>` : `
+        <div class="project-thumbnail project-thumbnail--placeholder" aria-hidden="true">
+            <span class="project-initials">${getProjectInitials(project.title)}</span>
+        </div>`}
+        <div class="project-body">
+            <h3 class="project-title">${project.title}</h3>
+            <p class="project-description">${project.description}</p>
+            <div class="project-tags" aria-label="Technologies used">
+                ${project.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+        </div>
+        <div class="project-footer">
+            ${project.github ? `<a href="${project.github}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View ${project.title} on GitHub">${githubIcon}<span>Code</span></a>` : ''}
+            ${project.demo ? `<a href="${project.demo}" target="_blank" rel="noopener noreferrer" class="project-link project-link--primary" aria-label="View ${project.title} live demo">${externalIcon}<span>Live Demo</span></a>` : ''}
+        </div>
+    `;
+
+    return card;
+}
+
+function animateProjectCards(cards) {
+    if (prefersReducedMotion || !window.gsap || !window.ScrollTrigger || !cards.length) {
+        return;
     }
-});
 
-// Navbar scroll effect
-const handleNavScroll = throttle(() => {
-    if (window.scrollY > 100) {
-        nav?.classList.add('scrolled');
-    } else {
-        nav?.classList.remove('scrolled');
-    }
-}, 100);
-
-window.addEventListener('scroll', handleNavScroll);
-
-// Active section highlighting
-const highlightActiveSection = () => {
-    const scrollPosition = window.scrollY + 150;
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const sectionId = section.getAttribute('id');
-        const correspondingLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
-        
-        if (!correspondingLink) return;
-        
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-            navLinks.forEach(link => link.classList.remove('active'));
-            correspondingLink.classList.add('active');
-        }
-    });
-};
-
-const debouncedHighlight = debounce(highlightActiveSection, 50);
-window.addEventListener('scroll', debouncedHighlight);
-window.addEventListener('load', highlightActiveSection);
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            const navHeight = nav?.offsetHeight || 80;
-            const targetPosition = targetElement.offsetTop - navHeight;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
+    gsap.from(cards, {
+        scrollTrigger: {
+            trigger: cards[0],
+            start: 'top 90%',
+            toggleActions: 'play none none none'
+        },
+        y: 24,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        stagger: 0.08,
+        overwrite: 'auto',
+        clearProps: 'y',
+        onComplete: () => {
+            cards.forEach(card => {
+                gsap.set(card, { clearProps: 'transform,opacity' });
             });
         }
     });
-});
+}
 
-// ================================
-// SCROLL ANIMATIONS
-// ================================
+function renderFeaturedProjects() {
+    const featuredGrid = document.getElementById('featured-projects');
+    if (!featuredGrid) return;
 
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+    featuredGrid.innerHTML = '';
+    const featuredProjects = PROJECTS.filter((project) => project.featured);
 
-const fadeInObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            // Optionally unobserve after animation
-            // fadeInObserver.unobserve(entry.target);
-        }
+    featuredProjects.forEach((project) => {
+        featuredGrid.appendChild(createProjectCard(project, true));
     });
-}, observerOptions);
 
-// Observe elements for fade-in animations
-const observeElements = () => {
-    const elementsToAnimate = [
-        '.about-card',
-        '.skill-category',
-        '.project-card',
-        '.project-list-item',
-        '.skill-group',
-        '.timeline-item',
-        '.achievement-card',
-        '.contact-card'
-    ];
-    
-    elementsToAnimate.forEach(selector => {
-        document.querySelectorAll(selector).forEach((el, index) => {
-            el.classList.add('fade-in');
-            el.style.transitionDelay = `${index * 0.1}s`;
-            fadeInObserver.observe(el);
+    animateProjectCards(Array.from(featuredGrid.children));
+}
+
+function renderProjects(projects) {
+    const grid = document.getElementById('projects-grid');
+    if (!grid) return;
+
+    const mountCards = () => {
+        grid.innerHTML = '';
+        projects.forEach((project) => {
+            grid.appendChild(createProjectCard(project));
         });
-    });
-};
+        animateProjectCards(Array.from(grid.children));
+    };
 
-// Run on page load
-window.addEventListener('load', observeElements);
-
-// ================================
-// FORM HANDLING
-// ================================
-
-const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
-
-const showError = (input, message) => {
-    const formGroup = input.closest('.form-group');
-    const errorElement = formGroup?.querySelector('.error-message');
-    
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-    }
-    
-    input.setAttribute('aria-invalid', 'true');
-    input.style.borderColor = '#ff6b6b';
-};
-
-const clearError = (input) => {
-    const formGroup = input.closest('.form-group');
-    const errorElement = formGroup?.querySelector('.error-message');
-    
-    if (errorElement) {
-        errorElement.textContent = '';
-        errorElement.style.display = 'none';
-    }
-    
-    input.removeAttribute('aria-invalid');
-    input.style.borderColor = '';
-};
-
-const validateForm = () => {
-    let isValid = true;
-    
-    const nameInput = contactForm?.querySelector('#name');
-    const emailInput = contactForm?.querySelector('#email');
-    const messageInput = contactForm?.querySelector('#message');
-    
-    // Validate name
-    if (nameInput) {
-        const name = nameInput.value.trim();
-        if (!name) {
-            showError(nameInput, 'Please enter your name');
-            isValid = false;
-        } else if (name.length < 2) {
-            showError(nameInput, 'Name must be at least 2 characters');
-            isValid = false;
-        } else {
-            clearError(nameInput);
-        }
-    }
-    
-    // Validate email
-    if (emailInput) {
-        const email = emailInput.value.trim();
-        if (!email) {
-            showError(emailInput, 'Please enter your email');
-            isValid = false;
-        } else if (!validateEmail(email)) {
-            showError(emailInput, 'Please enter a valid email address');
-            isValid = false;
-        } else {
-            clearError(emailInput);
-        }
-    }
-    
-    // Validate message
-    if (messageInput) {
-        const message = messageInput.value.trim();
-        if (!message) {
-            showError(messageInput, 'Please enter a message');
-            isValid = false;
-        } else if (message.length < 10) {
-            showError(messageInput, 'Message must be at least 10 characters');
-            isValid = false;
-        } else {
-            clearError(messageInput);
-        }
-    }
-    
-    return isValid;
-};
-
-// Real-time validation on blur
-if (contactForm) {
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('blur', () => {
-            if (input.value.trim()) {
-                validateForm();
-            }
+    if (!prefersReducedMotion && window.gsap && grid.children.length > 0) {
+        gsap.to(grid.children, {
+            opacity: 0,
+            y: 8,
+            duration: 0.2,
+            ease: 'power2.in',
+            stagger: 0.02,
+            onComplete: mountCards
         });
-        
-        // Clear error on input
-        input.addEventListener('input', () => {
-            if (input.getAttribute('aria-invalid') === 'true') {
-                clearError(input);
-            }
-        });
+        return;
+    }
+
+    mountCards();
+}
+
+function filterProjects(filter) {
+    const filtered = filter === 'all'
+        ? PROJECTS
+        : PROJECTS.filter((project) => project.category.includes(filter));
+
+    renderProjects(filtered);
+
+    document.querySelectorAll('.filter-btn').forEach((button) => {
+        const isActive = button.dataset.filter === filter;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
     });
 }
 
-// Form submission
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Clear previous status
-        if (formStatus) {
-            formStatus.textContent = '';
-            formStatus.className = 'form-status';
+function initProjectFilters() {
+    const filterContainer = document.getElementById('projects-filter');
+    if (!filterContainer) return;
+
+    filterContainer.innerHTML = '';
+    const allCategories = [...new Set(PROJECTS.flatMap((project) => project.category))];
+    const filters = ['all', ...allCategories];
+    const labelMap = {
+        all: 'All',
+        web: 'Web',
+        fullstack: 'Full Stack',
+        backend: 'Backend',
+        data: 'Data / ML'
+    };
+
+    filters.forEach((filter, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `filter-btn${index === 0 ? ' active' : ''}`;
+        button.dataset.filter = filter;
+        button.textContent = labelMap[filter] || filter;
+        button.setAttribute('aria-pressed', String(index === 0));
+        button.addEventListener('click', () => filterProjects(filter));
+        filterContainer.appendChild(button);
+    });
+}
+
+function initNavigation() {
+    const nav = document.querySelector('.site-nav');
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+
+    const closeMobileMenu = () => {
+        if (!navMenu || !navToggle) return;
+        navMenu.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    };
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', String(!isExpanded));
+            navMenu.classList.toggle('open');
+            document.body.style.overflow = !isExpanded ? 'hidden' : '';
+        });
+    }
+
+    document.querySelectorAll('.nav-menu a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', closeMobileMenu);
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!navMenu?.classList.contains('open')) return;
+        if (navMenu.contains(event.target) || navToggle?.contains(event.target)) return;
+        closeMobileMenu();
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && navMenu?.classList.contains('open')) {
+            closeMobileMenu();
+            navToggle?.focus();
         }
-        
-        // Validate form
-        if (!validateForm()) {
-            return;
+    });
+
+    const applyScrolledState = debounce(() => {
+        nav?.classList.toggle('scrolled', window.scrollY > 60);
+    }, 50);
+
+    window.addEventListener('scroll', applyScrolledState, { passive: true });
+    applyScrolledState();
+}
+
+function initActiveNavObserver() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+    if (!sections.length || !navLinks.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach((link) => link.classList.remove('active'));
+            const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+            if (activeLink) activeLink.classList.add('active');
+        });
+    }, { threshold: 0.4, rootMargin: '-10% 0px -50% 0px' });
+
+    sections.forEach((section) => observer.observe(section));
+}
+
+function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function initContactForm() {
+    const form = document.getElementById('contact-form');
+    const formStatus = document.getElementById('form-status');
+    if (!form || !formStatus) return;
+
+    const setError = (input, message) => {
+        const error = input.closest('.form-group')?.querySelector('.error-message');
+        if (error) error.textContent = message;
+        input.setAttribute('aria-invalid', 'true');
+    };
+
+    const clearError = (input) => {
+        const error = input.closest('.form-group')?.querySelector('.error-message');
+        if (error) error.textContent = '';
+        input.removeAttribute('aria-invalid');
+    };
+
+    const validate = () => {
+        let isValid = true;
+        const name = form.querySelector('#name');
+        const email = form.querySelector('#email');
+        const message = form.querySelector('#message');
+
+        if (name) {
+            if (!name.value.trim()) {
+                setError(name, 'Please enter your name.');
+                isValid = false;
+            } else {
+                clearError(name);
+            }
         }
-        
-        // Get form data
-        const formData = new FormData(contactForm);
-        const data = {
-            access_key: 'f45e1224-9822-4d7b-9ce0-e88fb5594e30',
-            name: formData.get('name'),
-            email: formData.get('email'),
-            message: formData.get('message'),
-            subject: `New message from ${formData.get('name')} - Portfolio Contact Form`
-        };
-        
-        // Show loading state
-        const submitButton = contactForm.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton?.innerHTML;
+
+        if (email) {
+            if (!email.value.trim()) {
+                setError(email, 'Please enter your email.');
+                isValid = false;
+            } else if (!validateEmail(email.value.trim())) {
+                setError(email, 'Please enter a valid email address.');
+                isValid = false;
+            } else {
+                clearError(email);
+            }
+        }
+
+        if (message) {
+            if (!message.value.trim()) {
+                setError(message, 'Please enter a message.');
+                isValid = false;
+            } else if (message.value.trim().length < 10) {
+                setError(message, 'Message must be at least 10 characters.');
+                isValid = false;
+            } else {
+                clearError(message);
+            }
+        }
+
+        return isValid;
+    };
+
+    form.querySelectorAll('input, textarea').forEach((field) => {
+        field.addEventListener('blur', validate);
+        field.addEventListener('input', () => clearError(field));
+    });
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        formStatus.textContent = '';
+
+        if (!validate()) return;
+
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton?.innerHTML || '';
         if (submitButton) {
             submitButton.disabled = true;
             submitButton.innerHTML = '<span>Sending...</span>';
         }
-        
+
+        const formData = new FormData(form);
+        const name = String(formData.get('name') || '');
+        const email = String(formData.get('email') || '');
+        const message = String(formData.get('message') || '');
+
         try {
-            // Send to Web3Forms API
-            const response = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                // Success
-                if (formStatus) {
-                    formStatus.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
-                    formStatus.style.color = 'var(--accent-cyan)';
+            if (FORMSPREE_ENDPOINT) {
+                const response = await fetch(FORMSPREE_ENDPOINT, {
+                    method: 'POST',
+                    headers: { Accept: 'application/json' },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Submission failed');
                 }
-                
-                // Reset form
-                contactForm.reset();
-                
-                // Clear form after delay
-                setTimeout(() => {
-                    if (formStatus) {
-                        formStatus.textContent = '';
-                    }
-                }, 5000);
             } else {
-                throw new Error(result.message || 'Submission failed');
+                const subject = encodeURIComponent(`Portfolio message from ${name}`);
+                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+                window.location.href = `mailto:sidhcoe@gmail.com?subject=${subject}&body=${body}`;
             }
-            
-        } catch (error) {
-            // Error handling
-            if (formStatus) {
-                formStatus.textContent = '✗ Something went wrong. Please try again.';
-                formStatus.style.color = '#ff6b6b';
-            }
-            console.error('Form submission error:', error);
+
+            form.outerHTML = '<div class="form-success" role="status" aria-live="polite"><h3>Thank you!</h3><p>Your message has been prepared successfully. I will get back to you soon.</p></div>';
+        } catch (_error) {
+            formStatus.textContent = 'Something went wrong. Please try again.';
         } finally {
-            // Reset button
-            if (submitButton && originalButtonText) {
+            if (submitButton) {
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalButtonText;
             }
@@ -374,236 +383,190 @@ if (contactForm) {
     });
 }
 
-// ================================
-// DYNAMIC YEAR IN FOOTER
-// ================================
-
-if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
-}
-
-// ================================
-// KEYBOARD NAVIGATION
-// ================================
-
-// Trap focus in mobile menu when open
-const trapFocus = (element) => {
-    const focusableElements = element.querySelectorAll(
-        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])'
-    );
-    
-    const firstFocusable = focusableElements[0];
-    const lastFocusable = focusableElements[focusableElements.length - 1];
-    
-    const handleTab = (e) => {
-        if (e.key !== 'Tab') return;
-        
-        if (e.shiftKey) {
-            if (document.activeElement === firstFocusable) {
-                lastFocusable.focus();
-                e.preventDefault();
-            }
-        } else {
-            if (document.activeElement === lastFocusable) {
-                firstFocusable.focus();
-                e.preventDefault();
-            }
-        }
-    };
-    
-    element.addEventListener('keydown', handleTab);
-    
-    return () => {
-        element.removeEventListener('keydown', handleTab);
-    };
-};
-
-// Close mobile menu on Escape key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && navMenu?.classList.contains('open')) {
-        navMenu.classList.remove('open');
-        navToggle?.setAttribute('aria-expanded', 'false');
-        navToggle?.focus();
-        document.body.style.overflow = '';
+function initGsapAnimations() {
+    if (!window.gsap || !window.ScrollTrigger) {
+        return;
     }
-});
 
-// ================================
-// PERFORMANCE OPTIMIZATIONS
-// ================================
+    gsap.registerPlugin(ScrollTrigger);
 
-// Lazy load images when they come into viewport
-const lazyLoadImages = () => {
-    const images = document.querySelectorAll('img[data-src]');
-    
-    const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-                imageObserver.unobserve(img);
+    if (prefersReducedMotion) {
+        document.querySelectorAll('.hero-name, .hero-tagline, .hero-description, .hero-cta, .hero-image, .section-heading, .experience-item, .skills-group, .project-card, .contact-section').forEach((element) => {
+            element.style.opacity = '1';
+            element.style.transform = 'none';
+        });
+        return;
+    }
+
+    gsap.set(['.hero-name', '.hero-tagline', '.hero-description', '.hero-cta', '.hero-image'], { opacity: 1 });
+
+    gsap.from('.hero-name', {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0
+    });
+
+    gsap.from('.hero-tagline', {
+        y: 20,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power2.out',
+        delay: 0.08
+    });
+
+    gsap.from('.hero-description', {
+        y: 15,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: 0.16
+    });
+
+    gsap.from('.hero-cta', {
+        y: 15,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        delay: 0.24
+    });
+
+    gsap.from('.hero-image', {
+        scale: 0.95,
+        opacity: 0,
+        duration: 0.9,
+        ease: 'power2.out',
+        delay: 0.08
+    });
+
+    gsap.utils.toArray('.section-heading').forEach((heading) => {
+        gsap.from(heading, {
+            scrollTrigger: {
+                trigger: heading,
+                start: 'top 90%',
+                toggleActions: 'play none none none'
+            },
+            y: 24,
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.out'
+        });
+    });
+
+    gsap.utils.toArray('.experience-item').forEach((item, index) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 90%',
+                toggleActions: 'play none none none'
+            },
+            x: -20,
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.out',
+            delay: index * 0.08
+        });
+    });
+
+    gsap.utils.toArray('.skills-group').forEach((group, index) => {
+        gsap.from(group, {
+            scrollTrigger: {
+                trigger: group,
+                start: 'top 90%',
+                toggleActions: 'play none none none'
+            },
+            y: 16,
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.out',
+            delay: index * 0.08
+        });
+    });
+
+    gsap.from('.contact-section', {
+        scrollTrigger: {
+            trigger: '.contact-section',
+            start: 'top 90%',
+            toggleActions: 'play none none none'
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out'
+    });
+
+    const navbar = document.querySelector('nav') || document.querySelector('header');
+    let lastScrollY = 0;
+    if (navbar) {
+        gsap.set(navbar, { y: 0 });
+        ScrollTrigger.create({
+            onUpdate: () => {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > 80 && currentScrollY > lastScrollY) {
+                    gsap.to(navbar, { y: -100, duration: 0.3, ease: 'power2.in', overwrite: true });
+                } else {
+                    gsap.to(navbar, { y: 0, duration: 0.3, ease: 'power2.out', overwrite: true });
+                }
+                lastScrollY = currentScrollY;
             }
         });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-};
+    }
 
-window.addEventListener('load', lazyLoadImages);
+    const progress = document.getElementById('scroll-progress');
+    if (progress) {
+        ScrollTrigger.create({
+            onUpdate: (self) => {
+                progress.style.width = `${self.progress * 100}%`;
+            }
+        });
+    }
+}
 
-// ================================
-// SCROLL TO TOP BUTTON (Optional)
-// ================================
+function initYear() {
+    const year = document.getElementById('year');
+    if (year) {
+        year.textContent = String(new Date().getFullYear());
+    }
+}
 
-const createScrollToTopButton = () => {
-    const button = document.createElement('button');
-    button.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 19V5M5 12l7-7 7 7"/>
-        </svg>
-    `;
-    button.className = 'scroll-to-top';
-    button.setAttribute('aria-label', 'Scroll to top');
-    button.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: var(--gradient-primary);
-        color: var(--bg-primary);
-        border: none;
-        cursor: pointer;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        box-shadow: var(--shadow-lg);
-        transition: all var(--transition-base);
-        z-index: 50;
-    `;
-    
-    // Show/hide based on scroll position
-    const toggleButton = throttle(() => {
-        if (window.scrollY > 500) {
-            button.style.display = 'flex';
+function safeLocalStorageRead(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (_error) {
+        return null;
+    }
+}
+
+function initScrollToTop() {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('visible');
         } else {
-            button.style.display = 'none';
+            scrollBtn.classList.remove('visible');
         }
-    }, 100);
-    
-    window.addEventListener('scroll', toggleButton);
-    
-    // Scroll to top on click
-    button.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    });
+
+    scrollBtn.addEventListener('click', () => {
+        gsap.to(window, {
+            scrollTo: 0,
+            duration: 0.8,
+            ease: 'power2.inOut'
         });
     });
-    
-    // Hover effect
-    button.addEventListener('mouseenter', () => {
-        button.style.transform = 'translateY(-4px) scale(1.05)';
-    });
-    
-    button.addEventListener('mouseleave', () => {
-        button.style.transform = 'translateY(0) scale(1)';
-    });
-    
-    document.body.appendChild(button);
-};
-
-// Uncomment to enable scroll-to-top button
-// window.addEventListener('load', createScrollToTopButton);
-
-// ================================
-// THEME SWITCHER (Optional)
-// ================================
-
-const initThemeSwitcher = () => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    
-    // Create theme toggle button if needed
-    // Implementation left as optional enhancement
-};
-
-// ================================
-// ANALYTICS & TRACKING (Optional)
-// ================================
-
-const trackEvent = (category, action, label) => {
-    // Placeholder for analytics tracking
-    // Integration with Google Analytics, Plausible, etc.
-    console.log('Event tracked:', { category, action, label });
-};
-
-// Track important interactions
-document.querySelectorAll('.btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const buttonText = button.textContent.trim();
-        trackEvent('Button', 'Click', buttonText);
-    });
-});
-
-// ================================
-// ACCESSIBILITY ENHANCEMENTS
-// ================================
-
-// Announce page transitions to screen readers
-const announcePageChange = (message) => {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-    document.body.appendChild(announcement);
-    
-    setTimeout(() => {
-        document.body.removeChild(announcement);
-    }, 1000);
-};
-
-// ================================
-// ERROR HANDLING
-// ================================
-
-window.addEventListener('error', (e) => {
-    console.error('Global error:', e.error);
-    // Optionally send to error tracking service
-});
-
-// ================================
-// INITIALIZATION
-// ================================
-
-const init = () => {
-    console.log('Portfolio initialized successfully');
-    
-    // Set initial active link
-    highlightActiveSection();
-    
-    // Initialize any other features
-    // initThemeSwitcher();
-};
-
-// Run initialization when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
 }
 
-// ================================
-// EXPORT FOR TESTING (Optional)
-// ================================
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        validateEmail,
-        debounce,
-        throttle
-    };
-}
+document.addEventListener('DOMContentLoaded', () => {
+    safeLocalStorageRead('theme');
+    initYear();
+    initNavigation();
+    initActiveNavObserver();
+    initProjectFilters();
+    filterProjects('all');
+    initContactForm();
+    initGsapAnimations();
+    initScrollToTop();
+});
