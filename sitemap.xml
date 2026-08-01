@@ -43,6 +43,22 @@
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
+
+    <!-- Blog Section -->
+    <url>
+        <loc>https://siddharthacharya.com.np/#blog</loc>
+        <lastmod>2026-02-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Resume Section -->
+    <url>
+        <loc>https://siddharthacharya.com.np/#resume</loc>
+        <lastmod>2026-02-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
     
     <!-- Contact Section -->
     <url>
