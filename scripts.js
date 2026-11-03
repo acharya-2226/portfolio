@@ -27,7 +27,7 @@
             role: 'Full-Stack Developer',
             category: ['web'],
             liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
+            githubUrl: 'https://github.com/acharya-2226/lms-project',
             image: 'https://placehold.co/640x400/1a1a2e/6366f1?text=Student+Dashboard'
         },
         {
@@ -37,8 +37,8 @@
             techStack: ['Python', 'TensorFlow', 'OpenCV', 'NumPy', 'Matplotlib'],
             role: 'ML Developer',
             category: ['ml', 'systems'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
+            liveUrl: 'https://github.com/acharya-2226/sl-recognition',
+            githubUrl: 'https://github.com/acharya-2226/sl-recognition',
             image: 'https://placehold.co/640x400/1a1a2e/a855f7?text=Sign+Language+ML'
         },
         {
@@ -48,8 +48,8 @@
             techStack: ['Cisco Packet Tracer', 'VLANs', 'OSPF', 'NAT', 'DHCP'],
             role: 'Network Designer',
             category: ['networking'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
+            liveUrl: 'https://github.com/acharya-2226/computer-networks',
+            githubUrl: 'https://github.com/acharya-2226/computer-networks',
             image: 'https://placehold.co/640x400/1a1a2e/10b981?text=Network+Lab'
         },
         {
@@ -59,8 +59,8 @@
             techStack: ['Python', 'Pandas', 'Matplotlib', 'Seaborn', 'Jupyter'],
             role: 'Data Analyst',
             category: ['data'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
+            liveUrl: 'https://github.com/acharya-2226/engineering-sem-3-ds',
+            githubUrl: 'https://github.com/acharya-2226/engineering-sem-3-ds',
             image: 'https://placehold.co/640x400/1a1a2e/ec4899?text=EDA+Analysis'
         },
         {
@@ -70,54 +70,22 @@
             techStack: ['C++', 'OpenGL', 'GLSL', 'Mathematics'],
             role: 'Developer',
             category: ['systems'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
+            liveUrl: 'https://github.com/acharya-2226/engineering-sem-3-grap',
+            githubUrl: 'https://github.com/acharya-2226/engineering-sem-3-grap',
             image: 'https://placehold.co/640x400/1a1a2e/f59e0b?text=OpenGL+Graphics'
         },
-        {
-            id: 'dsa-implementations',
-            title: 'Data Structures & Algorithms',
-            description: 'Comprehensive implementation of essential data structures (linked lists, trees, graphs, heaps) and classic algorithms (sorting, searching, dynamic programming) in C and Python.',
-            techStack: ['C', 'Python', 'Algorithms', 'Data Structures'],
-            role: 'Developer',
-            category: ['systems'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
-            image: 'https://placehold.co/640x400/1a1a2e/fbbf24?text=DSA+Implementations'
-        },
-        {
-            id: 'django-api',
-            title: 'RESTful API with Django',
-            description: 'RESTful API backend built with Django REST Framework featuring JWT authentication, pagination, filtering, and comprehensive API documentation. Designed for consumption by mobile and web clients.',
-            techStack: ['Django', 'DRF', 'Python', 'JWT', 'PostgreSQL'],
-            role: 'Backend Developer',
+                {
+            id: 'pix-cinema',
+            title: 'PIX Cinema – Online Movie Booking System',
+            description: 'Full-stack movie ticket booking platform with a Django REST Framework backend and a React (Vite) frontend. Features JWT authentication, role-based access for owners, staff and customers, movie and show management, a seat-map booking flow with database-level locking to prevent double booking, QR-based payment, and a custom-themed Django Admin.',
+            techStack: ['Django REST Framework', 'React', 'Vite', 'JWT', 'SQLite', 'Bootstrap'],
+            role: 'Full-Stack Developer',
             category: ['web'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
-            image: 'https://placehold.co/640x400/1a1a2e/3b82f6?text=Django+API'
-        },
-        {
-            id: 'packet-tracer-vlan',
-            title: 'VLAN Configuration & Routing',
-            description: 'Detailed Packet Tracer lab demonstrating VLAN setup, trunk configuration, inter-VLAN routing with router-on-a-stick, and network security with ACLs for a multi-department organization.',
-            techStack: ['Cisco Packet Tracer', 'VLANs', 'Router-on-a-Stick', 'ACLs'],
-            role: 'Network Engineer',
-            category: ['networking'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
-            image: 'https://placehold.co/640x400/1a1a2e/34d399?text=VLAN+Lab'
-        },
-        {
-            id: 'ml-classification',
-            title: 'Classification Model Comparison',
-            description: 'Comparative study of multiple machine learning classifiers (SVM, Random Forest, KNN, Logistic Regression) on standard datasets with cross-validation, hyperparameter tuning, and performance metrics.',
-            techStack: ['Python', 'Scikit-learn', 'Pandas', 'Matplotlib'],
-            role: 'ML Researcher',
-            category: ['ml', 'data'],
-            liveUrl: '#',
-            githubUrl: 'https://github.com/acharya-2226',
-            image: 'https://placehold.co/640x400/1a1a2e/c084fc?text=ML+Classification'
+            liveUrl: 'https://github.com/acharya-2226/ipscinemas', // no live demo found, so this points to the repo
+            githubUrl: 'https://github.com/acharya-2226/ipscinemas',
+            image: 'https://placehold.co/640x400/1a1a2e/f59e0b?text=PIX+Cinema'
         }
+
     ];
 
     /* -------------------------------------------------------------------
